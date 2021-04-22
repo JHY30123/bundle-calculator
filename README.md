@@ -1,6 +1,6 @@
 # Bundle Calculator
 
-## Context
+## Question Description
 Social media Influencers have been basing the price of their social media post on a single post basis. So If a brand required 10 posts (for example spread over a period) then they would be charged 10x the cost of a single post. One company has decided to allow social media influencers to sell posts in bundles and charge the brand on a per bundle basis. So if the Influencer sold image based posts in bundles of 5 and 10 and brand ordered 15 they would get a bundle of 10 and a bundle of 5.
 
 The company currently allows the influencer to monitize the following submission formats:
@@ -39,11 +39,20 @@ A successfully passing test(s) that demonstrates the following output: (The form
 
 
 
-### Requirements
+## Requirements
 
-* Gradle has to be used
+* `Gradle` and `Lombok` has to be used in this code test
 * Using `stream` and `lambda expression` when you can
-* Lombok has to be used
 * Use `log` instead of `system.out.println`
 * Unit test is required
+
+## Answers
+We can easily find that the price of per item drops with the increment of the package size in all three format. So 
+this question can be solved by simply selecting as "largest" package as we can without worrying about any optimization
+on package selection to find the best answer.
+
+
+
+
+
 
