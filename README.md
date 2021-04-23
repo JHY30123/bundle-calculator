@@ -46,10 +46,22 @@ A successfully passing test(s) that demonstrates the following output: (The form
 * Use `log` instead of `system.out.println`
 * Unit test is required
 
-## Answers
-We can easily find that the price of per item drops with the increment of the package size in all three format. So 
-this question can be solved by simply selecting as "largest" package as we can without worrying about any optimization
-on package selection to find the best answer.
+## 解题思路
+问题的关键点在于如何处理“剩余”物品，例如在礼包选择为3， 5条的情况下， 用户需要上传4条内容，平台会卖3条让用户保留1条信息留至下次上传还是用户必须选择可将4条内容全部覆盖的5条内容的礼包。一开始的时候我觉得是前者，但是很容易发现这类问题为“无约束下求最值”的问题，此类问题没有求解的必要，换言之即用户选择一条都不买自然为花销最少的方案。
+通过再次阅读题意可知用户必须通过选购捆绑包来全部上传内容。因而问题则成为了“逆完全背包问题”， 即`至少选择k个物品使得总价值最小`。因而思路可完全仿照完全背包问题解决。
+
+通过计算可知f[i][j]的状态转移方程不会改变，只需在比较过程求解最小值即可。
+
+在本次项目中的挑战为:
+1. 完全背包问题的数组项目起始点为1，但java数组下标必须为0开始。
+   
+    关于这个问题我最开始的解决方案为reindex数组，但后面发现reindex会破坏代码的逻辑结构。因而换了一种方法，即通过在数组的初始位置a[0]插入**正无穷**(double.POSITIVE_INFINATE)来实现。之所以选用正无穷而非*INTEGER.MAX_NUM*则在于防止误操作来改变插入值的特性。
+
+2. 如何在求得最优解的同时记录选择方案？
+
+    最开始的想法为辗转相除法，即`目标值/bundleValueMax`求得其最高位所需购买个数。再通过 `(目标值%bundleValueMax)/bundleValueMiddle`来获取次高位礼包所需购买个数。但后来发现这种方法在特定情况下会得出错误结论。
+例如测试用例`2040 VID`。因而目前的想法为在求解的过程中维护一个状态数组？这种做饭**增加了程序的耦合性及算法复杂度**，因而探讨一下其他方法的可行性（TODO）。
+
 
 
 
