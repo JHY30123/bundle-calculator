@@ -1,8 +1,13 @@
 package com.codetest;
 
+//import lombok.extern.java.Log;
+
+import lombok.extern.java.Log;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
+@Log
 public class Bundle {
 
     private String format;
@@ -29,9 +34,10 @@ public class Bundle {
         if(this.quantity == 0) return 0.0;
 
         HashMap<Integer, Double> priceTable = getPriceTable();
+        int[] state = new int[priceTable.size()];
 
         //Knapsack liked variables claim way
-        double[][] price = new double[priceTable.size() + 2][this.quantity + 1];
+        double[][] price = new double[priceTable.size()][this.quantity + 1];
         for(double[] row: price)
             Arrays.fill(row, Double.POSITIVE_INFINITY);
 
@@ -46,8 +52,16 @@ public class Bundle {
                 else price[i][j] = Math.min(price[i][j], price[i][j - volume[i]] + weight[i]);
             }
         }
+        //Decoding best solution
+        int vol = quantity;
+        for(int i = priceTable.size() - 1; i >= 1; i --) {
+            double priceOld = price[i][vol];
+            if(price[i][vol] != price[i - 1][vol]) {
+                vol -= volume[i];
+                if(price[i][vol] == priceOld) log.info(i - 1 + " * $" + weight[i]);
+                else log.info(i + "* $ " + weight[i]);
+            }
+        }
         return price[priceTable.size() - 1][quantity];
     }
-
-    
 }
