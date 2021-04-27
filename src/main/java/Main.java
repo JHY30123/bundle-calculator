@@ -1,12 +1,5 @@
-import com.codetest.BundleCalculator;
-import com.codetest.BundleCollection;
-import com.codetest.InputProcess;
-import com.codetest.OutputProcess;
+import com.codetest.mapper.OutputMapper;
 import com.codetest.entities.Input;
-import com.codetest.entities.Output;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.extern.java.Log;
 
 import java.io.IOException;
@@ -33,7 +26,7 @@ public class Main {
     Input input = new Input();
     input.setPostFormat("VID");
     input.setPostAmount(10);
-    BundleCalculator bundleCalculator = new BundleCalculator();
-    System.out.println(bundleCalculator.getMinBundleSelection(input));
+    OutputMapper outputMapper = new OutputMapper();
+    System.out.println(outputMapper.getMinBundleSelection(input));
   }
 }
