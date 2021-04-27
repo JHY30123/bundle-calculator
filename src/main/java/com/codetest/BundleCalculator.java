@@ -1,58 +1,48 @@
 package com.codetest;
 
-import lombok.Data;
-import lombok.extern.java.Log;
-
 import java.util.Arrays;
-import java.util.HashMap;
+import lombok.Data;
+
+import lombok.RequiredArgsConstructor;
 
 @Data
-@Log
+@RequiredArgsConstructor
 public class BundleCalculator {
-    AllBundleInfo allBundleInfo = new AllBundleInfo();
 
-    public ResultInfo minPriceCalculator(BundleInfo bundleInfo) {
-        ResultInfo resultInfo = new ResultInfo();
-        if(bundleInfo.getPostAmount() == 0) return resultInfo;
+  /**
+   * Get list of how many element got used in list in order to get target value.
+   *
+   * @param bundleSizeList Size list of
+   * @param amount The target value
+   * @return a list of element usage in bundleSizeList
+   */
+  public int[] getBundlePlan(Integer[] bundleSizeList, int amount) {
+    int[][] amountPath = new int[bundleSizeList.length][amount + 1];
 
-        HashMap<Integer, Double> priceTable = new HashMap<Integer, Double>(allBundleInfo.getBundle(bundleInfo.getPostFormat()));
+    int current = amount;
+    int[] bundlePlan = new int[bundleSizeList.length];
 
-        //Knapsack liked variables claim way
-        double[][] pricePath = new double[priceTable.size()][bundleInfo.getPostAmount() + 1];
-        for(double[] row: pricePath)
-            Arrays.fill(row, Double.POSITIVE_INFINITY);
+    for(int[] row: amountPath)
+      Arrays.fill(row, Integer.MAX_VALUE);
 
-        int[] bundleSize =  priceTable.keySet().stream().sorted().mapToInt(x -> Integer.valueOf(x)).toArray();
-        double[] bundlePrice = priceTable.values().stream().sorted().mapToDouble(x -> Double.valueOf(x)).toArray();
-
-        // dp process of Reversed Knapsack Problem
-        for(int i = 1; i <= priceTable.size() - 1; i ++) {
-            for(int j = 1; j <= bundleInfo.getPostAmount(); j ++) {
-                pricePath[i][j] = Math.min(pricePath[i][j],pricePath[i - 1][j]);
-                if(j <= bundleSize[i]) pricePath[i][j] = Math.min(pricePath[i][j], bundlePrice[i]);
-                else pricePath[i][j] = Math.min(pricePath[i][j], pricePath[i][j - bundleSize[i]] + bundlePrice[i]);
-            }
-        }
-        resultInfo.setMinTotalPrice(pricePath[priceTable.size() - 1][bundleInfo.getPostAmount()]);
-
-        //Decoding best solution
-        int vol = bundleInfo.getPostAmount();
-        String[] bundleDetails = new String[priceTable.size()];
-        for(int i = priceTable.size() - 1; i >= 1; i --) {
-            int count = 0;
-            if(pricePath[i][vol] != pricePath[i - 1][vol]) {
-                vol -= bundleSize[i];
-                bundleDetails[i] = (++ count + "* $" + bundlePrice[i]);
-                while(vol >= bundleSize[i] && pricePath[i][vol] != pricePath[i - 1][vol]) {
-                    bundleDetails[i] = (++ count + "* $" + bundlePrice[i]);
-                    vol -= bundleSize[i];
-                }
-            }
-        }
-
-        resultInfo.setPostFormat(bundleInfo.getPostFormat());
-        resultInfo.setPostAmount(bundleInfo.getPostAmount());
-        resultInfo.setBundleSelectionDetail(bundleDetails);
-        return resultInfo;
+    for (int i = 1; i <= bundleSizeList.length - 1; i++) {
+      for (int j = 1; j <= amount; j++) {
+        if (j <= bundleSizeList[i]) amountPath[i][j] = Math.min(amountPath[i-1][j],bundleSizeList[i]);
+        else amountPath[i][j] = Math.min(amountPath[i-1][j],amountPath[i][j - bundleSizeList[i]] + bundleSizeList[i]);
+      }
     }
+
+    for(int i = bundleSizeList.length - 1; i >= 1; i--) {
+      int count = 0;
+      if(amountPath[i][current] != amountPath[i -1][current]) {
+        current -= bundleSizeList[i];
+        bundlePlan[i] = ++ count;
+        while(current >= bundleSizeList[i] && amountPath[i][current] != amountPath[i - 1][current]) {
+          bundlePlan[i] = ++ count;
+          current -= bundleSizeList[i];
+        }
+      }
+    }
+    return bundlePlan;
+  }
 }
