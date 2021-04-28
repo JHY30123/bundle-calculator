@@ -1,19 +1,16 @@
-package com.codetest;
+package com.codetest.IOProcess;
 
-import com.codetest.entities.Output;
+import com.codetest.fields.Output;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-
-import java.util.Arrays;
 
 @Log
 @RequiredArgsConstructor
 public class OutputProcess {
-
   public void returnResultInfo(Output output) {
     log.info(output.getPostAmount() + " $" + output.getMinTotalPrice());
-    Arrays.stream(output.getBundleSelectionDetail())
-        .filter(x -> x != null)
+    output.getBundleSelectionDetail().stream()
+        .filter(str -> str.charAt(0) != '0')
         .forEach(log::info);
   }
 }

@@ -1,4 +1,4 @@
-package com.codetest;
+package com.codetest.resources;
 
 import lombok.Data;
 
