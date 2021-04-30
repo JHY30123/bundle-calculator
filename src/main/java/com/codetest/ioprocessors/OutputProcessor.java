@@ -6,7 +6,7 @@ import lombok.extern.java.Log;
 
 @Log
 @RequiredArgsConstructor
-public class OutputProcess {
+public class OutputProcessor {
   public void returnResultInfo(Output output) {
     log.info(output.getPostAmount() + " $" + output.getMinTotalPrice());
     output.getBundleSelectionDetail().stream()

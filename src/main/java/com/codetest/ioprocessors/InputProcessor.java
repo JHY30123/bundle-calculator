@@ -1,4 +1,4 @@
-package com.codetest.IOProcess;
+package com.codetest.ioprocessors;
 
 import com.codetest.fields.Input;
 import java.io.BufferedReader;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class InputProcess {
+public class InputProcessor {
   public static Input inputConvert(String s) {
     String[] inputContext = s.split("\\s+");
     Input inputFields =
@@ -24,14 +24,27 @@ public class InputProcess {
   }
 
   public List<String> getInput() throws IOException {
+    //    List<String> inputList = new ArrayList<>();
+    //    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    //    String input;
+    //    do {
+    //      input = br.readLine();
+    //      inputList.add(input);
+    //    } while (input.length() != 0);
+    //    return inputList.stream().filter(i -> !i.isEmpty()).collect(Collectors.toList());
     List<String> inputList = new ArrayList<>();
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    String input = null;
+    BufferedReader br = null;
     try {
-      input = br.readLine();
-      inputList.add(input);
+      br = new BufferedReader(new InputStreamReader(System.in));
+      String input;
+      do {
+        input = br.readLine();
+        inputList.add(input);
+      } while (input.length() != 0);
     } finally {
-      if (input.length() == 0) br.close();
+      if (br == null)
+        ;
+      br.close();
     }
     return inputList.stream().filter(i -> !i.isEmpty()).collect(Collectors.toList());
   }

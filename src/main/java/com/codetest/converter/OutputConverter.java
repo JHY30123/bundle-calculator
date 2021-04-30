@@ -6,7 +6,6 @@ import com.codetest.fields.Output;
 import com.codetest.resources.BundleCollection;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.Data;
@@ -25,30 +24,23 @@ public class OutputConverter {
             .postAmount(input.getPostAmount())
             .postFormat(input.getPostFormat())
             .minTotalPrice(
-                this.bundleCalculator.getTotalAmount(
-                    getBundlePriceList(getBundle(input.getPostFormat())),
+                this.bundleCalculator.totalPriceCalculator(
+                    this.bundleCollection.getBundlePriceList(
+                        this.bundleCollection.getBundle(input.getPostFormat())),
                     this.bundleCalculator.getBundlePlan(
-                        getBundleSizeList(getBundle(input.getPostFormat())),
+                        this.bundleCollection.getBundleSizeList(
+                            this.bundleCollection.getBundle(input.getPostFormat())),
                         input.getPostAmount())))
             .bundleSelectionDetail(
                 setSelectionDetailList(
                     this.bundleCalculator.getBundlePlan(
-                        getBundleSizeList(getBundle(input.getPostFormat())), input.getPostAmount()),
-                    getBundlePriceList(getBundle(input.getPostFormat()))))
+                        this.bundleCollection.getBundleSizeList(
+                            this.bundleCollection.getBundle(input.getPostFormat())),
+                        input.getPostAmount()),
+                    this.bundleCollection.getBundlePriceList(
+                        this.bundleCollection.getBundle(input.getPostFormat()))))
             .build();
     return output;
-  }
-
-  private Map<Integer, BigDecimal> getBundle(String format) {
-    return this.bundleCollection.getBundleCollection().get(format);
-  }
-
-  private Integer[] getBundleSizeList(Map<Integer, BigDecimal> bundleDetail) {
-    return bundleDetail.keySet().toArray(new Integer[0]);
-  }
-
-  private BigDecimal[] getBundlePriceList(Map<Integer, BigDecimal> bundleDetail) {
-    return bundleDetail.values().toArray(new BigDecimal[0]);
   }
 
   private List<String> setSelectionDetailList(int[] bundlePlan, BigDecimal[] bundlePriceList) {

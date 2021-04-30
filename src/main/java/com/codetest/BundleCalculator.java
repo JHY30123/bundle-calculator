@@ -3,15 +3,13 @@ package com.codetest;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.stream.IntStream;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-@Data
 @RequiredArgsConstructor
 public class BundleCalculator {
 
   /**
-   * Get list of how many element got used in list in order to get target value.
+   * Get list of how many element got used in bundleSizeList in order to get target value.
    *
    * @param bundleSizeList Size list of
    * @param amount The target value
@@ -57,7 +55,7 @@ public class BundleCalculator {
    * @param bundlePlan BundlePriceList's element usage situation
    * @return Total cost of this selected plan
    */
-  public BigDecimal getTotalAmount(BigDecimal[] bundlePriceList, int[] bundlePlan) {
+  public BigDecimal totalPriceCalculator(BigDecimal[] bundlePriceList, int[] bundlePlan) {
     return IntStream.range(1, Math.max(bundlePriceList.length, bundlePlan.length))
         .mapToObj(x -> bundlePriceList[x].multiply(BigDecimal.valueOf(bundlePlan[x])))
         .reduce(BigDecimal.ZERO, BigDecimal::add);

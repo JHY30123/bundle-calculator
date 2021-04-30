@@ -1,8 +1,8 @@
-import com.codetest.IOProcess.InputProcess;
-import com.codetest.IOProcess.OutputProcess;
+import com.codetest.IOProcess.OutputProcessor;
 import com.codetest.converter.OutputConverter;
 import com.codetest.fields.Input;
 import com.codetest.fields.Output;
+import com.codetest.ioprocessors.InputProcessor;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,18 +11,18 @@ import lombok.extern.java.Log;
 @Log
 public class Main {
   public static void main(String[] args) throws IOException {
-    InputProcess inputProcess = new InputProcess();
+    InputProcessor inputProcessor = new InputProcessor();
     OutputConverter outputConverter = new OutputConverter();
-    OutputProcess outputProcess = new OutputProcess();
+    OutputProcessor outputProcessor = new OutputProcessor();
     System.out.println("Please input posts amount and format, press enter twice to confirm");
 
-    List<String> inputContent = inputProcess.getInput();
+    List<String> inputContent = inputProcessor.getInput();
     List<Input> inputFields =
-        inputContent.stream().map(InputProcess::inputConvert).collect(Collectors.toList());
+        inputContent.stream().map(InputProcessor::inputConvert).collect(Collectors.toList());
     List<Output> outputs =
         inputFields.stream()
             .map(input -> outputConverter.setOutputFormat(input))
             .collect(Collectors.toList());
-    outputs.forEach(output -> outputProcess.returnResultInfo(output));
+    outputs.forEach(output -> outputProcessor.returnResultInfo(output));
   }
 }

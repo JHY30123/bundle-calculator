@@ -1,43 +1,30 @@
-//import com.codetest.entities.InputFields;
-//import com.codetest.InputProcess;
-//import org.junit.jupiter.api.Test;
-//
-//import java.io.ByteArrayInputStream;
-//import java.io.IOException;
-//import java.io.InputStream;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//
-//public class InputAndOutputTest {
-//
-//
-//    public InputProcess inputProcess = new InputProcess();
-//
-//    @Test
-//    public void testInputConvert() {
-//        InputFields inputFields = new InputFields();
-//        inputFields.setPostFormat("IMG");
-//        inputFields.setPostAmount(12);
-//
-//        InputProcess inputProcess = new InputProcess();
-//        assertEquals(inputFields, InputProcess.inputConvert("12 IMG"));
-//    }
-//
-//    @Test
-//    public void testGetInput() throws IOException {
-//        List<String> input = new ArrayList<>();
-//        String test1 = "13 IMG";
-//        String test2 = "14 Flac";
-//        String test3 = "10 VID";
-//        input.add(test1);
-//        input.add(test2);
-//        input.add(test3);
-//
-//        InputStream inputExpect = new ByteArrayInputStream("13 IMG\n14 Flac\n10 VID\n\n ".getBytes());
-//        System.setIn(inputExpect);
-//        List<String> actualResult = inputProcess.getInput();
-//        assertEquals(input, actualResult);
-//    }
-//}
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.codetest.converter.OutputConverter;
+import com.codetest.fields.Input;
+import com.codetest.fields.Output;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
+public class InputAndOutputTest {
+
+  @Test
+  public void testOutputConverter() {
+    Input input = Input.builder().postAmount(12).postFormat("IMG").build();
+    OutputConverter outputConverter = new OutputConverter();
+
+    List<String> selectionDetails = Arrays.asList("2* $450.0", "0* $800.0");
+    Output output = outputConverter.setOutputFormat(input);
+
+    Output outputExpect =
+        Output.builder()
+            .postAmount(12)
+            .postFormat("IMG")
+            .bundleSelectionDetail(selectionDetails)
+            .minTotalPrice(BigDecimal.valueOf(900.0))
+            .build();
+    assertEquals(outputExpect, output);
+  }
+}
