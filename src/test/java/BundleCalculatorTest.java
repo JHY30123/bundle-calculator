@@ -1,69 +1,36 @@
-//import com.codetest.BundleCalculator_Backup;
-//import com.codetest.entities.InputFields;
-//import com.codetest.ResultInfo;
-//import org.junit.jupiter.api.Test;
-//
-//import static org.junit.jupiter.api.Assertions.assertEquals;
-//
-//public class BundleCalculatorTest {
-//    @Test
-//    public void costAndPlanOfVID11Bundle() {
-//        InputFields inputFields = new InputFields();
-//        BundleCalculator_Backup bundleCalculator = new BundleCalculator_Backup();
-//        inputFields.setPostFormat("VID");
-//        inputFields.setPostAmount(11);
-//
-//        String detail1 = "2* $570.0";
-//        String detail2 = "1* $900.0";
-//        String[] details = new String[4];
-//        details[1] = detail1;
-//        details[2] =detail2;
-//        ResultInfo resultInfo = new ResultInfo();
-//        resultInfo.setMinTotalPrice(2040.0);
-//        resultInfo.setPostAmount(11);
-//        resultInfo.setPostFormat("VID");
-//        resultInfo.setBundleSelectionDetail(details);
-//
-//        assertEquals(resultInfo, bundleCalculator.minPriceCalculator(inputFields));
-//    }
-//
-//    @Test
-//    public void costAndPlanOfIMG23Bundle() {
-//        InputFields inputFields = new InputFields();
-//        BundleCalculator_Backup bundleCalculator = new BundleCalculator_Backup();
-//        inputFields.setPostFormat("IMG");
-//        inputFields.setPostAmount(23);
-//
-//        String detail1 = "1* $450.0";
-//        String detail2 = "2* $800.0";
-//        String[] details = new String[3];
-//        details[1] = detail1;
-//        details[2] = detail2;
-//        ResultInfo resultInfo = new ResultInfo();
-//        resultInfo.setMinTotalPrice(2050.0);
-//        resultInfo.setPostAmount(23);
-//        resultInfo.setPostFormat("IMG");
-//        resultInfo.setBundleSelectionDetail(details);
-//
-//        assertEquals(resultInfo, bundleCalculator.minPriceCalculator(inputFields));
-//    }
-//
-//    @Test
-//    public void costAndPlanOfFlac9Bundle() {
-//        InputFields inputFields = new InputFields();
-//        BundleCalculator_Backup bundleCalculator = new BundleCalculator_Backup();
-//        inputFields.setPostFormat("Flac");
-//        inputFields.setPostAmount(9);
-//
-//        String detail1 = "1* $1147.5";
-//        String[] details = new String[4];
-//        details[3] = detail1;
-//        ResultInfo resultInfo = new ResultInfo();
-//        resultInfo.setMinTotalPrice(1147.5);
-//        resultInfo.setPostAmount(9);
-//        resultInfo.setPostFormat("Flac");
-//        resultInfo.setBundleSelectionDetail(details);
-//
-//        assertEquals(resultInfo, bundleCalculator.minPriceCalculator(inputFields));
-//    }
-//}
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.codetest.BundleCalculator;
+import java.math.BigDecimal;
+import org.junit.jupiter.api.Test;
+
+public class BundleCalculatorTest {
+  BundleCalculator bundleCalculator = new BundleCalculator();
+
+  @Test
+  public void totalPriceTest() {
+    BigDecimal[] priceList = {
+      BigDecimal.ZERO, BigDecimal.valueOf(570), BigDecimal.valueOf(900), BigDecimal.valueOf(1530)
+    };
+    int[] plan = {0, 0, 1, 1};
+    BigDecimal target = BigDecimal.valueOf(2430);
+    assertEquals(target, this.bundleCalculator.totalPriceCalculator(priceList, plan));
+  }
+
+  @Test
+  public void getBundlePlanTestOnVID11() {
+    Integer[] bundleSizeList = {0, 3, 5, 9};
+    int amount = 11;
+    int[] target = {0, 2, 1, 0};
+    assertArrayEquals(target, this.bundleCalculator.getBundlePlan(bundleSizeList, amount));
+  }
+
+  @Test
+  public void getBundlePlanWithWhileLoopUsedInPathTraceBack() {
+    Integer[] sizeList = {0, 3, 5, 9};
+    int amount = 13;
+    int[] target = {0, 1, 2, 0};
+    assertArrayEquals(target, this.bundleCalculator.getBundlePlan(sizeList, amount));
+  }
+}

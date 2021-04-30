@@ -1,14 +1,13 @@
-package com.codetest;
-
-import lombok.Data;
+package com.codetest.resources;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import lombok.Data;
 
 @Data
 public class BundleCollection {
-  private final Map<String, Map<Integer, BigDecimal>> BundleCollection =
+  private final Map<String, Map<Integer, BigDecimal>> bundleCollection =
       new HashMap<>() {
         {
           put(
@@ -42,4 +41,16 @@ public class BundleCollection {
               });
         }
       };
+
+  public Map<Integer, BigDecimal> getBundle(String format) {
+    return this.bundleCollection.get(format);
+  }
+
+  public Integer[] getBundleSizeList(Map<Integer, BigDecimal> bundleDetail) {
+    return bundleDetail.keySet().toArray(new Integer[0]);
+  }
+
+  public BigDecimal[] getBundlePriceList(Map<Integer, BigDecimal> bundleDetail) {
+    return bundleDetail.values().toArray(new BigDecimal[0]);
+  }
 }
