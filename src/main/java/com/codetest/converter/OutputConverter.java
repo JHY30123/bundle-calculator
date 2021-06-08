@@ -1,9 +1,9 @@
 package com.codetest.converter;
 
 import com.codetest.BundleCalculator;
-import com.codetest.fields.Input;
-import com.codetest.fields.Output;
-import com.codetest.resources.BundleCollection;
+import com.codetest.config.BundlesConfig;
+import com.codetest.model.Order;
+import com.codetest.model.BundleSelection;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,32 +15,32 @@ import lombok.extern.java.Log;
 @Log
 public class OutputConverter {
 
-  BundleCollection bundleCollection = new BundleCollection();
+  BundlesConfig bundlesConfig = new BundlesConfig();
   BundleCalculator bundleCalculator = new BundleCalculator();
 
-  public Output setOutputFormat(Input input) {
-    Output output =
-        Output.builder()
-            .postAmount(input.getPostAmount())
-            .postFormat(input.getPostFormat())
+  public BundleSelection setOutputFormat(Order order) {
+    BundleSelection bundleSelection =
+        BundleSelection.builder()
+            .postAmount(order.getPostAmount())
+            .postFormat(order.getPostFormat())
             .minTotalPrice(
-                this.bundleCalculator.totalPriceCalculator(
-                    this.bundleCollection.getBundlePriceList(
-                        this.bundleCollection.getBundle(input.getPostFormat())),
+                bundleCalculator.totalPriceCalculator(
+                        bundlesConfig.getBundlePriceList(
+                        this.bundlesConfig.getBundle(order.getPostFormat())),
                     this.bundleCalculator.getBundlePlan(
-                        this.bundleCollection.getBundleSizeList(
-                            this.bundleCollection.getBundle(input.getPostFormat())),
-                        input.getPostAmount())))
+                        this.bundlesConfig.getBundleSizeList(
+                            this.bundlesConfig.getBundle(order.getPostFormat())),
+                        order.getPostAmount())))
             .bundleSelectionDetail(
                 setSelectionDetailList(
                     this.bundleCalculator.getBundlePlan(
-                        this.bundleCollection.getBundleSizeList(
-                            this.bundleCollection.getBundle(input.getPostFormat())),
-                        input.getPostAmount()),
-                    this.bundleCollection.getBundlePriceList(
-                        this.bundleCollection.getBundle(input.getPostFormat()))))
+                        this.bundlesConfig.getBundleSizeList(
+                            this.bundlesConfig.getBundle(order.getPostFormat())),
+                        order.getPostAmount()),
+                    this.bundlesConfig.getBundlePriceList(
+                        this.bundlesConfig.getBundle(order.getPostFormat()))))
             .build();
-    return output;
+    return bundleSelection;
   }
 
   private List<String> setSelectionDetailList(int[] bundlePlan, BigDecimal[] bundlePriceList) {

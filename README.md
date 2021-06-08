@@ -24,7 +24,7 @@ submission format. For simplicity, each order should contain the minimal number 
 ### Input:
 
 Each order has a series of lines with each line containing the number of items followed by the
-submission format code An example input:
+submission format code An example order:
 
 ```
 10 IMG
@@ -34,7 +34,7 @@ submission format code An example input:
 
 ### Output:
 
-A successfully passing test(s) that demonstrates the following output: (The format of the output is
+A successfully passing test(s) that demonstrates the following bundleSelection: (The format of the bundleSelection is
 not important)
 
 ```
@@ -55,7 +55,10 @@ not important)
 * Use `log` instead of `system.out.println`
 * Unit test is required
 
-## 解题思路
+## Solution
+
+It is easily to get that this is a `dynamic programming` problem. So we need to find the best solution first and then retrive
+the bundle selection details.
 
 问题的关键点在于如何处理“剩余”物品，例如在礼包选择为3， 5条的情况下，
 用户需要上传4条内容，平台会卖3条让用户保留1条信息留至下次上传还是用户必须选择可将4条内容全部覆盖的5条内容的礼包。一开始的时候我觉得是前者，但是很容易发现这类问题为“无约束下求最值”的问题，此类问题没有求解的必要，换言之即用户选择一条都不买自然为花销最少的方案。

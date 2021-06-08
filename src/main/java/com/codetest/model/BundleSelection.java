@@ -1,4 +1,4 @@
-package com.codetest.fields;
+package com.codetest.model;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Output {
+public class BundleSelection {
   private int postAmount;
   private String postFormat;
   private BigDecimal minTotalPrice;

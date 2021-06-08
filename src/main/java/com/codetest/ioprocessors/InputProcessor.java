@@ -1,6 +1,6 @@
 package com.codetest.ioprocessors;
 
-import com.codetest.fields.Input;
+import com.codetest.model.Order;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,25 +13,17 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 public class InputProcessor {
-  public static Input inputConvert(String s) {
+  public static Order inputConvert(String s) {
     String[] inputContext = s.split("\\s+");
-    Input inputFields =
-        Input.builder()
+    Order orderFields =
+        Order.builder()
             .postAmount(Integer.parseInt(inputContext[0]))
             .postFormat(inputContext[1])
             .build();
-    return inputFields;
+    return orderFields;
   }
 
   public List<String> getInput() throws IOException {
-    //    List<String> inputList = new ArrayList<>();
-    //    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    //    String input;
-    //    do {
-    //      input = br.readLine();
-    //      inputList.add(input);
-    //    } while (input.length() != 0);
-    //    return inputList.stream().filter(i -> !i.isEmpty()).collect(Collectors.toList());
     List<String> inputList = new ArrayList<>();
     BufferedReader br = null;
     try {
@@ -42,9 +34,7 @@ public class InputProcessor {
         inputList.add(input);
       } while (input.length() != 0);
     } finally {
-      if (br == null)
-        ;
-      br.close();
+      if (br == null) br.close();
     }
     return inputList.stream().filter(i -> !i.isEmpty()).collect(Collectors.toList());
   }

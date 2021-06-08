@@ -1,4 +1,4 @@
-package com.codetest.fields;
+package com.codetest.model;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Input {
+public class Order {
   private int postAmount;
   private String postFormat;
 }
