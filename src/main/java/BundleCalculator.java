@@ -1,7 +1,7 @@
-import com.codetest.vo.BundleBreakdown;
-import com.codetest.vo.Post;
+import com.codetest.entities.BundleBreakdown;
+import com.codetest.entities.Post;
 import com.codetest.ioprocessors.InputProcessor;
-import com.codetest.service.BreakdownGenerator;
+import com.codetest.service.BreakdownService;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
@@ -12,7 +12,7 @@ public class BundleCalculator {
 
   public static void main(String[] args) {
     InputProcessor inputProcessor = new InputProcessor();
-    BreakdownGenerator breakdownGenerator = new BreakdownGenerator();
+    BreakdownService breakdownService = new BreakdownService();
     log.info("Please input post number and format, press enter twice to confirm");
 
     try {
@@ -21,7 +21,7 @@ public class BundleCalculator {
           inputContent.stream().map(InputProcessor::postParser).collect(Collectors.toList());
       List<BundleBreakdown> bundleBreakdownList =
           postList.stream()
-              .map(post -> breakdownGenerator.generateBreakdownList(post))
+              .map(post -> breakdownService.generateBreakdownList(post))
               .collect(Collectors.toList());
       bundleBreakdownList.forEach(bundleBreakdown -> log.info(bundleBreakdown.toString()));
     } catch (IOException e) {

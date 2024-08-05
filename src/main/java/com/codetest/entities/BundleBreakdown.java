@@ -1,4 +1,4 @@
-package com.codetest.vo;
+package com.codetest.entities;
 
 import com.codetest.enums.Format;
 import java.math.BigDecimal;
@@ -15,5 +15,4 @@ public class BundleBreakdown {
   private Format format;
   private BigDecimal totalPrice;
   private List<String> breakdownDetail;
-
 }

@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class BundleSelector {
+public class BundleService {
   private int[] minCountArray;
   private List<List<Integer>> breakdownList;
 

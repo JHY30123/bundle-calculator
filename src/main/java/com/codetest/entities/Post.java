@@ -1,4 +1,4 @@
-package com.codetest.vo;
+package com.codetest.entities;
 
 import com.codetest.enums.Format;
 import lombok.AllArgsConstructor;

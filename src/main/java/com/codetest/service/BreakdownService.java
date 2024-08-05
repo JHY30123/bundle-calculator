@@ -1,7 +1,7 @@
 package com.codetest.service;
 
-import com.codetest.vo.BundleBreakdown;
-import com.codetest.vo.Post;
+import com.codetest.entities.BundleBreakdown;
+import com.codetest.entities.Post;
 import com.codetest.entities.BundleDictionary;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class BreakdownGenerator {
-    BundleSelector bundleSelector = new BundleSelector();
+public class BreakdownService {
+    BundleService bundleService = new BundleService();
     BundleDictionary bundleDictionary = new BundleDictionary();
 
     // TODO: Calculate the total price in a better way
@@ -19,7 +19,7 @@ public class BreakdownGenerator {
 
     private List<Integer> calculateBundlePlan(Post post) {
         List<Integer> bundleSizeList = bundleDictionary.getBundleSizeList(post.getFormat());
-        return bundleSelector.generateSelection(bundleSizeList, post.getAmount());
+        return bundleService.generateSelection(bundleSizeList, post.getAmount());
     }
 
     public List<String> generateBreakDownDetail(Post post) {

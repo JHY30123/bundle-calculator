@@ -1,7 +1,7 @@
 package com.codetest.ioprocessors;
 
 import com.codetest.enums.Format;
-import com.codetest.vo.Post;
+import com.codetest.entities.Post;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
