@@ -19,7 +19,7 @@ Video | VID | 3 @ $570 5 @ $900 9 @ $1530
 ## Task
 
 Given a brands order, you are required to determine the cost and bundle breakdown for each
-submission format. For simplicity, each order should contain the minimal number of bundles.
+submission format. **For simplicity, each order should contain the minimal number of bundles**.
 
 ### Input:
 
@@ -54,6 +54,9 @@ not important)
 * Using `stream` and `lambda expression` when you can
 * Use `log` instead of `system.out.println`
 * Unit test is required
+
+## Solution
+The requirement says to get the 
 
 ## Run and Result
 

@@ -1,26 +1,33 @@
-import com.codetest.dto.BundleBreakdown;
-import com.codetest.dto.Post;
+import com.codetest.vo.BundleBreakdown;
+import com.codetest.vo.Post;
 import com.codetest.ioprocessors.InputProcessor;
-import com.codetest.ioprocessors.OutputProcessor;
-import com.codetest.service.OutputConverter;
+import com.codetest.service.BreakdownGenerator;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class BundleCalculator {
-  public static void main(String[] args) throws IOException {
-    InputProcessor inputProcessor = new InputProcessor();
-    OutputConverter outputConverter = new OutputConverter();
-    OutputProcessor outputProcessor = new OutputProcessor();
-    System.out.println("Please input post amount and format, press enter twice to confirm");
+  private static final Logger log = Logger.getLogger(BundleCalculator.class.getName());
 
-    List<String> inputContent = inputProcessor.getInput();
-    List<Post> postFields =
-        inputContent.stream().map(InputProcessor::postParser).collect(Collectors.toList());
-    List<BundleBreakdown> bundleBreakdowns =
-        postFields.stream()
-            .map(post -> outputConverter.populateBreakdown(post))
-            .collect(Collectors.toList());
-    bundleBreakdowns.forEach(bundleBreakdown -> outputProcessor.returnResultInfo(bundleBreakdown));
+  public static void main(String[] args) {
+    InputProcessor inputProcessor = new InputProcessor();
+    BreakdownGenerator breakdownGenerator = new BreakdownGenerator();
+    log.info("Please input post number and format, press enter twice to confirm");
+
+    try {
+      List<String> inputContent = inputProcessor.getInput();
+      List<Post> postList =
+          inputContent.stream().map(InputProcessor::postParser).collect(Collectors.toList());
+      List<BundleBreakdown> bundleBreakdownList =
+          postList.stream()
+              .map(post -> breakdownGenerator.generateBreakdownList(post))
+              .collect(Collectors.toList());
+      bundleBreakdownList.forEach(bundleBreakdown -> log.info(bundleBreakdown.toString()));
+    } catch (IOException e) {
+      log.severe("Error reading input");
+    } catch (IllegalArgumentException e) {
+      log.severe("Invalid format");
+    }
   }
 }

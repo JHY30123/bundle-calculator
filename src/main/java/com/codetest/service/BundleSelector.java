@@ -1,73 +1,64 @@
 package com.codetest.service;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BundleSelector {
-
-//  private int test() {
-//    for(int i = 1; i <= n; i++) {
-//      for(int j = m; j >= v[i]; j --) {
-//        f[j] = Math.max(f[j], f[j - v[i]] + w[i]);
-//      }
-//    }
-//    return f[m];
-//  }
+  private int[] minCountArray;
+  private List<List<Integer>> breakdownList;
 
   /**
-   * Get list of how many element got used in bundleSizeList in order to get target value.
+   * Calculate the fewest number of bundles to make up the given number, return empty list if no
+   * combinations suitable
    *
-   * @param bundleSizeList Size list of
+   * @param bundleOptionList Size list of
    * @param amount The target value
-   * @return a list of element usage in bundleSizeList
+   * @return bundle number list
    */
-  public List<Integer> calculateBundlePlan(List<Integer> bundleSizeList, int amount) {
-    int[][] amountPath = new int[bundleSizeList.size()][amount + 1];
-
-    int current = amount;
-    Integer[] bundlePlan = new Integer[bundleSizeList.size()];
-    for (int[] row : amountPath) Arrays.fill(row, Integer.MAX_VALUE);
-
-    for (int i = 1; i <= bundleSizeList.size() - 1; i++) {
-      for (int j = 1; j <= amount; j++) {
-        if (j <= bundleSizeList.get(i))
-          amountPath[i][j] = Math.min(amountPath[i - 1][j], bundleSizeList.get(i));
-        else
-          amountPath[i][j] =
-              Math.min(
-                  amountPath[i - 1][j], amountPath[i][j - bundleSizeList.get(i)] + bundleSizeList.get(i));
-      }
-    }
-
-    for (int i = bundleSizeList.size() - 1; i >= 1; i--) {
-      int count = 0;
-      if (amountPath[i][current] != amountPath[i - 1][current]) {
-        current -= bundleSizeList.get(i);
-        bundlePlan[i] = ++count;
-        while (current >= bundleSizeList.get(i)
-            && amountPath[i][current] != amountPath[i - 1][current]) {
-          bundlePlan[i] = ++count;
-          current -= bundleSizeList.get(i);
-        }
-      }
-    }
-    return Arrays.asList(bundlePlan);
+  public List<Integer> generateSelection(List<Integer> bundleOptionList, int amount) {
+    minCountArray = new int[amount + 1];
+    breakdownList = new ArrayList<>(Collections.nCopies(amount + 1, null));
+    Arrays.fill(minCountArray, Integer.MAX_VALUE);
+    minBundleNumberDp(bundleOptionList, amount);
+    return minCountArray[amount] == Integer.MAX_VALUE
+        ? Collections.emptyList()
+        : breakdownList.get(amount);
   }
 
   /**
-   * Get total cost of selected plan in certain bundle
+   * Dynamic programming to find the fewest number of bundles to make up the given number
    *
-   * @param bundlePriceList Price list of certain format
-   * @param bundlePlan BundlePriceList's element usage situation
-   * @return Total cost of this selected plan
+   * @param bundleSizeList Size list of
+   * @param count The target value
+   * @return The fewest number of bundles to make up the given number
    */
-  public BigDecimal totalPriceCalculator(List<BigDecimal> bundlePriceList, List<Integer> bundlePlan) {
-    return IntStream.range(1, Math.max(bundlePriceList.size(), bundlePlan.size()))
-        .mapToObj(x -> bundlePriceList.get(x).multiply(BigDecimal.valueOf(bundlePlan.get(x))))
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  public int minBundleNumberDp(List<Integer> bundleSizeList, int count) {
+    if (count == 0) return 0;
+    // No solution
+    if (count < 0) return -1;
+    if (minCountArray[count] != Integer.MAX_VALUE) return minCountArray[count];
+
+    int minCount = Integer.MAX_VALUE;
+    for (int i = 0; i < bundleSizeList.size(); i++) {
+      int bundleSize = bundleSizeList.get(i);
+      int subProblem = minBundleNumberDp(bundleSizeList, count - bundleSize);
+      if (subProblem != -1 && subProblem + 1 < minCount) {
+        minCount = subProblem + 1;
+
+        // TODO: Refactor this part
+        if (breakdownList.get(count - bundleSize) == null) {
+          breakdownList.set(
+              count - bundleSize, new ArrayList<>(Collections.nCopies(bundleSizeList.size(), 0)));
+        }
+        breakdownList.set(count, new ArrayList<>(breakdownList.get(count - bundleSize)));
+        breakdownList.get(count).set(i, breakdownList.get(count).get(i) + 1);
+      }
+      this.minCountArray[count] = (minCount == Integer.MAX_VALUE ? -1 : minCount);
+    }
+    return this.minCountArray[count];
   }
 }
