@@ -1,7 +1,7 @@
 package com.codetest.ioprocessors;
 
-import com.codetest.enums.Format;
 import com.codetest.entities.Post;
+import com.codetest.enums.Format;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,9 +14,6 @@ public class InputProcessor {
   public static Post postParser(String s) {
     String[] intput = s.split("\\s+");
     String format = intput[1].toUpperCase();
-    if(!Format.isValid(format)) {
-      throw new IllegalArgumentException("Invalid format");
-    }
     Post post =
         Post.builder()
             .amount(Integer.parseInt(intput[0]))
