@@ -1,8 +1,10 @@
 package com.codetest.service;
 
-import com.codetest.vo.BundleBreakdown;
-import com.codetest.vo.Post;
+import com.codetest.entities.BundleBreakdown;
+import com.codetest.entities.Post;
 import com.codetest.entities.BundleDictionary;
+import lombok.RequiredArgsConstructor;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +12,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class BreakdownGenerator {
-    BundleSelector bundleSelector = new BundleSelector();
+@RequiredArgsConstructor
+public class BreakdownService {
+    BundleService bundleService = new BundleService();
     BundleDictionary bundleDictionary = new BundleDictionary();
 
-    // TODO: Calculate the total price in a better way
     BigDecimal totalPrice = BigDecimal.ZERO;
 
     private List<Integer> calculateBundlePlan(Post post) {
         List<Integer> bundleSizeList = bundleDictionary.getBundleSizeList(post.getFormat());
-        return bundleSelector.generateSelection(bundleSizeList, post.getAmount());
+        return bundleService.generateSelection(bundleSizeList, post.getAmount());
     }
 
     public List<String> generateBreakDownDetail(Post post) {
@@ -29,7 +31,12 @@ public class BreakdownGenerator {
         List<Entry<Integer, BigDecimal>> entryList = new ArrayList<>(bundleDetailMap.entrySet());
 
         for(int i = 0; i < selectionList.size(); i++) {
-            bundleDetail.add(selectionList.get(i) + " x " + entryList.get(i).getKey() + " $" + calculatePrice(entryList.get(i).getValue(), selectionList.get(i)));
+            BigDecimal subTotalPrice = calculatePrice(entryList.get(i).getValue(), selectionList.get(i));
+            // Filter out the bundle with 0 amount
+            if(selectionList.get(i) != 0) {
+                bundleDetail.add(selectionList.get(i) + " x " + entryList.get(i).getKey() + " $" + subTotalPrice);
+                totalPrice = totalPrice.add(subTotalPrice);
+            }
         }
         return bundleDetail;
     }
@@ -42,6 +49,8 @@ public class BreakdownGenerator {
                 .totalPrice(totalPrice)
                 .breakdownDetail(breakdownDetail)
                 .build();
+        // Reset the total price
+        totalPrice = BigDecimal.ZERO;
         return bundleBreakdown;
     }
 

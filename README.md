@@ -10,11 +10,11 @@ posts in bundles of 5 and 10 and brand ordered 15 they would get a bundle of 10 
 
 The company currently allows the influencer to monitize the following submission formats:
 
-Submission format | Format code | Bundles
------------------ | ----------- | -------
-Image | IMG | 5 @ $450 10 @ $800
-Audio | Flac | 3 @ $427.50 6 @ $810 9 @ $1147.50
-Video | VID | 3 @ $570 5 @ $900 9 @ $1530
+| Submission format | Format code | Bundles                           |
+|-------------------|-------------|-----------------------------------|
+| Image             | IMG         | 5 @ $450 10 @ $800                |
+| Audio             | Flac        | 3 @ $427.50 6 @ $810 9 @ $1147.50 |
+| Video             | VID         | 3 @ $570 5 @ $900 9 @ $1530       |
 
 ## Task
 
@@ -55,20 +55,30 @@ not important)
 * Use `log` instead of `system.out.println`
 * Unit test is required
 
-## Solution
-The requirement says to get the 
+## Solution 
+In the requirement, the only restriction is the order should contain the minimal number of bundles. So, the problem can be converted
+to a `Coin Change` problem.
+
+The implementation is divided into three parts:
+1. `BundleCalculator` - This class is responsible for calculating the minimum number of bundles for the given order.
+2. `BundleProcessor` - This class is responsible for processing the order and calculating the cost and bundle breakdown for each submission format.
+3. `OutputProcess` - This class is responsible for printing the output in the required format. All the required content is populated in the `BundleBreakdown` object.
 
 ## Run and Result
 
 ```
-11 VID
+15 FLAC
+13 VID
+10 IMG
 
-Apr 28, 2021 4:43:02 PM com.codetest.ioprocessors.OutputProcess returnResultInfo
-INFO: 11 $2040.0
-Apr 28, 2021 4:43:02 PM java.util.ArrayList forEach
-INFO: 2* $570.0
-Apr 28, 2021 4:43:02 PM java.util.ArrayList forEach
-INFO: 1* $900.0
+Aug 15, 2024 5:21:39 PM BundleCalculator lambda$main$0
+INFO: BundleBreakdown(number=15, format=VID, totalPrice=2670.0, breakdownDetail=[2 x 3 $1140.0, 1 x 9 $1530.0])
+Aug 15, 2024 5:21:39 PM BundleCalculator lambda$main$0
+INFO: BundleBreakdown(number=15, format=FLAC, totalPrice=1957.5, breakdownDetail=[1 x 6 $810.0, 1 x 9 $1147.5])
+Aug 15, 2024 5:21:39 PM BundleCalculator lambda$main$0
+INFO: BundleBreakdown(number=13, format=VID, totalPrice=2370.0, breakdownDetail=[1 x 3 $570.0, 2 x 5 $1800.0])
+Aug 15, 2024 5:21:39 PM BundleCalculator lambda$main$0
+INFO: BundleBreakdown(number=10, format=IMG, totalPrice=800.0, breakdownDetail=[1 x 10 $800.0])
 ```
 
 
