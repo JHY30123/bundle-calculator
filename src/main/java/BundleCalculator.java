@@ -21,7 +21,7 @@ public class BundleCalculator {
           inputContent.stream().map(InputProcessor::postParser).collect(Collectors.toList());
       List<BundleBreakdown> bundleBreakdownList =
           postList.stream()
-              .map(post -> breakdownService.generateBreakdownList(post))
+              .map(breakdownService::generateBreakdownList)
               .collect(Collectors.toList());
       bundleBreakdownList.forEach(bundleBreakdown -> log.info(bundleBreakdown.toString()));
     } catch (IOException e) {
@@ -30,4 +30,5 @@ public class BundleCalculator {
       log.severe("Invalid format");
     }
   }
+
 }
