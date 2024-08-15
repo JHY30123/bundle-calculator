@@ -10,16 +10,14 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class InputProcessor {
+public class BundleProcessor {
   public static Post postParser(String s) {
     String[] intput = s.split("\\s+");
     String format = intput[1].toUpperCase();
-    Post post =
-        Post.builder()
+    return Post.builder()
             .amount(Integer.parseInt(intput[0]))
             .format(Format.valueOf(format))
             .build();
-    return post;
   }
 
   public List<String> getInput() throws IOException {
