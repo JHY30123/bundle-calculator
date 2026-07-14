@@ -20,6 +20,7 @@ java {
 
 application {
     mainClass = 'BundleCalculator'
+    applicationDefaultJvmArgs = ['-Djava.util.logging.config.file=logging.properties']
 }
 
 repositories {

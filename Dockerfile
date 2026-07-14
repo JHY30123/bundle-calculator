@@ -13,5 +13,6 @@ RUN gradle --no-daemon clean installDist
 FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /home/gradle/project/build/install/bundle_test ./
+COPY logging.properties ./
 # The CLI reads order lines from stdin; run the container with `-i` to pipe input.
 ENTRYPOINT ["./bin/bundle_test"]
