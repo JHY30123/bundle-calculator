@@ -11,7 +11,7 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 public class BundleBreakdown {
-  private int number;
+  private int amount;
   private Format format;
   private BigDecimal totalPrice;
   private List<String> breakdownDetail;

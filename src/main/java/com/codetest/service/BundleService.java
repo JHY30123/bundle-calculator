@@ -1,64 +1,68 @@
 package com.codetest.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BundleService {
-  private int[] minCountArray;
-  private List<List<Integer>> breakdownList;
-
   /**
    * Calculate the fewest number of bundles to make up the given number, return empty list if no
    * combinations suitable
    *
-   * @param bundleOptionList Size list of
+   * @param bundleSizeList Size list of
    * @param amount The target value
    * @return bundle number list
    */
-  public List<Integer> generateSelection(List<Integer> bundleOptionList, int amount) {
-    minCountArray = new int[amount + 1];
-    breakdownList = new ArrayList<>(Collections.nCopies(amount + 1, null));
-    Arrays.fill(minCountArray, Integer.MAX_VALUE);
-    minBundleNumberDp(bundleOptionList, amount);
-    return minCountArray[amount] == Integer.MAX_VALUE
-        ? Collections.emptyList()
-        : breakdownList.get(amount);
+  public List<Integer> generateSelection(List<Integer> bundleSizeList, int amount) {
+    Map<Integer, Result> memo = new HashMap<>();
+    Result result = solve(bundleSizeList, amount, memo);
+    return result.isValid() ? result.breakdown() : Collections.emptyList();
   }
 
   /**
-   * Dynamic programming to find the fewest number of bundles to make up the given number
+   * Dynamic programming to find the fewest number of bundles to make up the given number,
+   * memoized per call via {@code memo} so no state is shared across invocations/threads.
    *
    * @param bundleSizeList Size list of
-   * @param count The target value
-   * @return The fewest number of bundles to make up the given number
+   * @param target The target value
+   * @param memo Per-call memoization cache
+   * @return The best {@link Result} (fewest bundles + the selection) for this target
    */
-  public int minBundleNumberDp(List<Integer> bundleSizeList, int count) {
-    if (count == 0) return 0;
-    // No solution
-    if (count < 0) return -1;
-    if (minCountArray[count] != Integer.MAX_VALUE) return minCountArray[count];
+  private Result solve(List<Integer> bundleSizeList, int target, Map<Integer, Result> memo) {
+    if (target == 0) return new Result(0, Collections.nCopies(bundleSizeList.size(), 0));
+    if (target < 0) return Result.NONE;
+    Result cached = memo.get(target);
+    if (cached != null) return cached;
 
-    int minCount = Integer.MAX_VALUE;
-    for (int i = 0; i < bundleSizeList.size(); i++) {
-      int bundleSize = bundleSizeList.get(i);
-      int subProblem = minBundleNumberDp(bundleSizeList, count - bundleSize);
-      if (subProblem != -1 && subProblem + 1 < minCount) {
-        minCount = subProblem + 1;
+    Result result =
+        IntStream.range(0, bundleSizeList.size())
+            .mapToObj(i -> extend(solve(bundleSizeList, target - bundleSizeList.get(i), memo), i))
+            .filter(Result::isValid)
+            .min(Comparator.comparingInt(Result::count))
+            .orElse(Result.NONE);
+    memo.put(target, result);
+    return result;
+  }
 
-        // TODO: Refactor this part
-        if (breakdownList.get(count - bundleSize) == null) {
-          breakdownList.set(
-              count - bundleSize, new ArrayList<>(Collections.nCopies(bundleSizeList.size(), 0)));
-        }
-        breakdownList.set(count, new ArrayList<>(breakdownList.get(count - bundleSize)));
-        breakdownList.get(count).set(i, breakdownList.get(count).get(i) + 1);
-      }
-      this.minCountArray[count] = (minCount == Integer.MAX_VALUE ? -1 : minCount);
+  /** Returns a new {@link Result} with the count at {@code index} incremented by one. */
+  private Result extend(Result sub, int index) {
+    if (!sub.isValid()) return Result.NONE;
+    List<Integer> nextBreakdown = new ArrayList<>(sub.breakdown());
+    nextBreakdown.set(index, nextBreakdown.get(index) + 1);
+    return new Result(sub.count() + 1, nextBreakdown);
+  }
+
+  private record Result(int count, List<Integer> breakdown) {
+    static final Result NONE = new Result(Integer.MAX_VALUE, null);
+
+    boolean isValid() {
+      return count != Integer.MAX_VALUE;
     }
-    return this.minCountArray[count];
   }
 }

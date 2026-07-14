@@ -1,6 +1,7 @@
+package com.codetest.service;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.codetest.service.BundleService;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;

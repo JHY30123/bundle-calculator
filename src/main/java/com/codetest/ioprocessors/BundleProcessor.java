@@ -7,17 +7,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class BundleProcessor {
-  public static Post postParser(String s) {
-    String[] intput = s.split("\\s+");
-    String format = intput[1].toUpperCase();
-    return Post.builder()
-            .amount(Integer.parseInt(intput[0]))
-            .format(Format.valueOf(format))
-            .build();
+  public static Post postParser(String line) {
+    Objects.requireNonNull(line, "line");
+    String[] tokenArray = line.trim().split("\\s+");
+    if (tokenArray.length != 2) {
+      throw new IllegalArgumentException("Expected '<amount> <format>' but got: '" + line + "'");
+    }
+    try {
+      return Post.builder()
+              .amount(Integer.parseInt(tokenArray[0]))
+              .format(Format.fromCode(tokenArray[1]))
+              .build();
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Amount is not a valid integer: '" + tokenArray[0] + "'", e);
+    }
   }
 
   public List<String> getInput() throws IOException {

@@ -2,6 +2,8 @@ package com.codetest.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum Format {
   IMG("IMG"),
@@ -12,5 +14,12 @@ public enum Format {
 
   Format(String code) {
     this.code = code;
+  }
+
+  public static Format fromCode(String code) {
+    return Arrays.stream(values())
+            .filter(f -> f.code.equalsIgnoreCase(code))
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Unknown format code: '" + code + "'"));
   }
 }

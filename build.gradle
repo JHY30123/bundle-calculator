@@ -1,14 +1,26 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 ext {
-    lombokVersion = '1.18.20'
-    junitVersion = '5.7.0'
+    lombokVersion = '1.18.34'
+    junitVersion = '5.10.2'
 }
 
 group 'org.codetest'
 version '1.0-SNAPSHOT'
+
+java {
+
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+application {
+    mainClass = 'BundleCalculator'
+}
 
 repositories {
     mavenCentral()
@@ -28,4 +40,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+// Connect stdin so the CLI can read order lines when launched via `./gradlew run`.
+run {
+    standardInput = System.in
 }
