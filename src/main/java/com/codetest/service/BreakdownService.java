@@ -14,15 +14,15 @@ import java.util.TreeMap;
 
 @RequiredArgsConstructor
 public class BreakdownService {
-    BundleService bundleService = new BundleService();
-    BundleDictionary bundleDictionary = new BundleDictionary();
+    private final BundleService bundleService;
+    private final BundleDictionary bundleDictionary;
 
     private List<Integer> calculateBundlePlan(Post post) {
         List<Integer> bundleSizeList = bundleDictionary.getBundleSizeList(post.getFormat());
         return bundleService.generateSelection(bundleSizeList, post.getAmount());
     }
 
-    public BundleBreakdown generateBreakdownList(Post post) {
+    public BundleBreakdown generateBreakdown(Post post) {
         List<String> bundleDetail = new ArrayList<>();
         List<Integer> selectionList = calculateBundlePlan(post);
         Map<Integer, BigDecimal> bundleDetailMap = new TreeMap<>(bundleDictionary.getBundle(post.getFormat()));
@@ -39,7 +39,7 @@ public class BreakdownService {
         }
 
         BundleBreakdown bundleBreakdown = BundleBreakdown.builder()
-                .number(post.getAmount())
+                .amount(post.getAmount())
                 .format(post.getFormat())
                 .totalPrice(totalPrice)
                 .breakdownDetail(bundleDetail)

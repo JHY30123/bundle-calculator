@@ -1,10 +1,12 @@
+package com.codetest.service;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.codetest.entities.BundleBreakdown;
+import com.codetest.entities.BundleDictionary;
 import com.codetest.entities.Post;
 import com.codetest.enums.Format;
-import com.codetest.service.BreakdownService;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
@@ -12,38 +14,36 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class BreakdownServiceTest {
-  private BreakdownService breakdownService = new BreakdownService();
-  private Post post;
+  private BreakdownService breakdownService;
 
   @BeforeEach
   void setUp() {
-    breakdownService = new BreakdownService();
-
+    breakdownService = new BreakdownService(new BundleService(), new BundleDictionary());
   }
 
   @Test
-  void generateBreakdownList_withValidPost_returnsCorrectDetails() {
+  void generateBreakdown_withValidPost_returnsCorrectDetails() {
     Post post = Post.builder().amount(10).format(Format.IMG).build();
-    List<String> expectedDetails = Arrays.asList("1 x 10 $800.0");
-    BundleBreakdown breakdown = breakdownService.generateBreakdownList(post);
+    List<String> expectedDetails = Arrays.asList("1 x 10 $800.00");
+    BundleBreakdown breakdown = breakdownService.generateBreakdown(post);
     assertEquals(expectedDetails, breakdown.getBreakdownDetail());
   }
 
   @Test
-  void generateBreakdownList_withValidPost_returnsCorrectBreakdown() {
+  void generateBreakdown_withValidPost_returnsCorrectBreakdown() {
     Post post = Post.builder().amount(20).format(Format.IMG).build();
-    BundleBreakdown breakdown = breakdownService.generateBreakdownList(post);
-    assertEquals(20, breakdown.getNumber());
+    BundleBreakdown breakdown = breakdownService.generateBreakdown(post);
+    assertEquals(20, breakdown.getAmount());
     assertEquals(Format.IMG, breakdown.getFormat());
-    assertEquals(BigDecimal.valueOf(1600.0), breakdown.getTotalPrice());
+    assertEquals(new BigDecimal("1600.00"), breakdown.getTotalPrice());
     // hardcoded price table
-    assertEquals(Arrays.asList("2 x 10 $1600.0"), breakdown.getBreakdownDetail());
+    assertEquals(Arrays.asList("2 x 10 $1600.00"), breakdown.getBreakdownDetail());
   }
 
   @Test
-  void generateBreakdownList_withZeroAmount_returnsEmptyBreakdownDetail() {
+  void generateBreakdown_withZeroAmount_returnsEmptyBreakdownDetail() {
     Post post = Post.builder().amount(0).format(Format.IMG).build();
-    BundleBreakdown breakdown = breakdownService.generateBreakdownList(post);
+    BundleBreakdown breakdown = breakdownService.generateBreakdown(post);
     assertTrue(breakdown.getBreakdownDetail().isEmpty());
   }
 

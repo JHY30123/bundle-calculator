@@ -3,7 +3,6 @@ package com.codetest.entities;
 import com.codetest.enums.Format;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,38 +13,30 @@ import lombok.Data;
 public class BundleDictionary {
 
   private final Map<Integer, BigDecimal> imageBundleMap =
-      new TreeMap<>() {
-        {
-          put(5, BigDecimal.valueOf(450.0));
-          put(10, BigDecimal.valueOf(800.0));
-        }
-      };
+      new TreeMap<>(
+          Map.of(
+              5, new BigDecimal("450.00"),
+              10, new BigDecimal("800.00")));
 
   private final Map<Integer, BigDecimal> audioBundleMap =
-      new TreeMap<>() {
-        {
-          put(3, BigDecimal.valueOf(427.50));
-          put(6, BigDecimal.valueOf(810.0));
-          put(9, BigDecimal.valueOf(1147.50));
-        }
-      };
+      new TreeMap<>(
+          Map.of(
+              3, new BigDecimal("427.50"),
+              6, new BigDecimal("810.00"),
+              9, new BigDecimal("1147.50")));
+
   private final Map<Integer, BigDecimal> videoBundleMap =
-      new TreeMap<>() {
-        {
-          put(3, BigDecimal.valueOf(570.0));
-          put(5, BigDecimal.valueOf(900.0));
-          put(9, BigDecimal.valueOf(1530.0));
-        }
-      };
+      new TreeMap<>(
+          Map.of(
+              3, new BigDecimal("570.00"),
+              5, new BigDecimal("900.00"),
+              9, new BigDecimal("1530.00")));
 
   private final Map<String, Map<Integer, BigDecimal>> bundleCollection =
-      new HashMap<>() {
-        {
-          put(Format.IMG.code, imageBundleMap);
-          put(Format.FLAC.code, audioBundleMap);
-          put(Format.VID.code, videoBundleMap);
-        }
-      };
+      Map.of(
+          Format.IMG.code, imageBundleMap,
+          Format.FLAC.code, audioBundleMap,
+          Format.VID.code, videoBundleMap);
 
   public Map<Integer, BigDecimal> getBundle(Format format) {
     return bundleCollection.get(format.getCode());

@@ -1,13 +1,11 @@
 package com.codetest.entities;
 
 import com.codetest.enums.Format;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
 
 @Value
 @Builder(builderClassName = "PostBuilder",buildMethodName = "build")
-@AllArgsConstructor
 public class Post {
   private int amount;
   private Format format;
