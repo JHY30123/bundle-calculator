@@ -93,20 +93,13 @@ from stdin:
 
 ```
 docker build -t bundle-calculator .
-printf '10 IMG\n15 FLAC\n13 VID\n' | docker run -i --rm bundle-calculator
+docker run -i --rm bundle-calculator
 ```
-
-The image is built in two stages: a `gradle:8.2-jdk17` stage compiles and packages the application
-distribution, and a slim `eclipse-temurin:17-jre` stage runs it.
 
 ## Continuous Integration
 
 Every push and pull request runs `./gradlew build` (compile + tests) via GitHub Actions; see
 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)
-
-## License
-
-Released under the [MIT License](LICENSE).
 
 ## Run and Result
 
@@ -119,6 +112,10 @@ INFO: BundleBreakdown(amount=10, format=IMG, totalPrice=800.00, breakdownDetail=
 INFO: BundleBreakdown(amount=15, format=FLAC, totalPrice=1957.50, breakdownDetail=[1 x 9 $1147.50, 1 x 6 $810.00])
 INFO: BundleBreakdown(amount=13, format=VID, totalPrice=2370.00, breakdownDetail=[2 x 5 $1800.00, 1 x 3 $570.00])
 ```
+
+## License
+
+Released under the [MIT License](LICENSE).
 
 
 
