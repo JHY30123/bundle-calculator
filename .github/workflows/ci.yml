@@ -16,11 +16,3 @@ jobs:
 
       - name: Run tests
         run: gradle build --no-daemon
-
-      - name: Upload test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-report
-          path: build/reports/tests/test
-          if-no-files-found: ignore
