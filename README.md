@@ -102,8 +102,7 @@ distribution, and a slim `eclipse-temurin:17-jre` stage runs it.
 ## Continuous Integration
 
 Every push and pull request runs `./gradlew build` (compile + tests) via GitHub Actions; see
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml). The test report is uploaded as a build
-artifact.
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml)
 
 ## License
 
