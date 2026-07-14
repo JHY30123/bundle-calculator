@@ -47,8 +47,8 @@ public class BundleDictionary {
         }
       };
 
-  public Map<Integer, BigDecimal> getBundle(Format formatCode) {
-    return bundleCollection.get(formatCode.name());
+  public Map<Integer, BigDecimal> getBundle(Format format) {
+    return bundleCollection.get(format.getCode());
   }
 
   public List<Integer> getBundleSizeList(Format format) {

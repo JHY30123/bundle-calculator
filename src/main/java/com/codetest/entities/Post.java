@@ -3,13 +3,11 @@ package com.codetest.entities;
 import com.codetest.enums.Format;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
+@Value
 @Builder(builderClassName = "PostBuilder",buildMethodName = "build")
 @AllArgsConstructor
-@NoArgsConstructor
 public class Post {
   private int amount;
   private Format format;
@@ -19,8 +17,8 @@ public class Post {
     private Format format;
 
     public PostBuilder amount(int amount) {
-      if (amount <= 0) {
-        throw new IllegalArgumentException("Amount must be greater than zero");
+      if (amount < 0) {
+        throw new IllegalArgumentException("Amount must be greater equal than zero");
       }
       this.amount = amount;
       return this;
